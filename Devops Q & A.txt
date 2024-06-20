@@ -1,0 +1,1050 @@
+Devops
+---------------
+
+1. What is the difference between containerization and virtualization?
+
+A. - In virtualization, each virtual machine has its own hypervisor, resulting in fully isolated operating system instances.
+
+ - Containerization isolates the host operating system machine and containers, which means the containers share the same kernel as the host OS, providing a lighter-weight virtualization approach.
+
+-  Containers are more lightweight compared to virtual machines, enabling efficient resource utilization without the need for a hypervisor, benefiting DevOps processes.
+
+ - Virtual machines are heavier in size, often occupying gigabytes of space due to the guest OS and hypervisor requirements.
+
+ - Containers are lightweight, with each container image only being a few megabytes in size, making them more efficient in terms of resource usage and speed.
+
+
+
+
+
+
+2. What steps do you take to troubleshoot an application that's failing?
+
+A. I will start by gathering detailed information about the symptoms of  the failure. this includes error messages, logs, and the behaviour of the application.
+
+communicate with the users or stakeholders to understand what issues they are facing.
+
+review the recent changes in the application, such as new deployments, configuration changes, or updates to dependencies.
+
+using monitoring tools like Prometheus, Grafana to check the application's performance metrics.
+
+look for anomalies in CPU usage, memory consumption, network traffic, and response times around the time of failure.
+
+if recent deployment or change caused the issue, consider rolling back to the previous stable version.
+
+
+
+
+
+3. How do manage log metrics in production environment?
+
+A. in recent project, we used the ELK stack to collect and analyze logs. Prometheus and Grafana were used to monitor system performance. 
+
+Centralized logging: 
+all logs from various servers were sent to elastic search via Logstash.
+
+metrics monitoring:
+Prometheus collects the performance metrics, and Grafana displays these metrics on dashboards.
+
+alerts:
+we set up alerts for high error rates and resource usage, which were integrated with Jira which is owned by Atlassian for immediate notification. 
+
+Analysis:
+Kibana was used to analyze logs, helping us quickly find and fix issues.
+
+
+
+
+4. Log rotation policy in real time EKS project?
+
+A. log rotation policies are typically based on the log file size, count and time intervals. 
+
+suppose, you have a EKS cluster running a web application. the application logs are collected by fluent bit and send to amazon CloudWatch. you need to ensure that logs are rotated and retained efficiently to avoid excessive storage costs and maintain compliance.
+
+- the application generated the logs continuously, fluent bit forwards these logs to CloudWatch, logs are stored in a log group named 'eks-log-group' with a daily log rotation policy.
+
+- in CloudWatch a retention policy of 30 days is set for the 'eks-log-group'
+
+
+
+4. How do ensure the security of the application you are deploying ?
+
+A. I use tools like GIT and GitHub to manage code. this helps keep track of changes and makes sure only the right people can access and modify the code.
+
+I setup automated process using Jenkins to build and test the application. this helps catch any issues early and makes sure  only secure, high-quality code gets deployed.
+
+for setting up servers and other resources, I use AWS service. I configure security to control who can access what, making sure everything is locked down properly. I also use terraform to automate these setups, ensuring they are secure and consistent.
+
+I use docker to package applications into containers. Kubernetes then helps manages these containers, keeping them secure and running smoothly.
+
+I use strategies like rolling updates and blue/green deployments to update applications without downtime. this ensures that if something goes wrong, we can quickly roll back to a secure state. I also make sure all version are properly tagged and verified.
+
+I set up permissions carefully so that people only have access to what they need. regular audits and compliance checks helps ensure we are following best practises and security standards.
+
+
+
+
+
+
+5. What are the key benefits of using microservice architecture?
+
+A. - Microservices allow independent scaling of different components of an application, enabling efficient resource allocation and accommodating varying workloads without affecting the entire system.
+
+ - By breaking down applications into smaller, independently deployable services, developers have the flexibility to choose the most suitable tools and technologies for each microservice, enabling faster feature development and adaptation to evolving requirements.
+
+ -  Each microservice can be updated or maintained independently without affecting the entire system, reducing the risk of system-wide failures and minimizing downtime during updates.
+
+ - Isolating services enables localized failures to have minimal impact across the entire system, allowing for better fault tolerance and easier troubleshooting.
+
+
+
+
+6. What are the different types of EC2 instances available?
+
+A.	1. General purpose
+	2. Compute-Optimized
+	3. Memory-optimized
+	4. Storage-Optimized
+	5. Accelerated Computing 
+	6. High-performance Computing instances
+
+
+
+
+
+
+7. How many types of EBS volumes do we have?
+
+A. EBS -- Elastic Block storage 
+	1. General Purpose [gp2, gp3]
+	2. Provisioned IOPS SSD [io1, io2]
+	3. Hard Disk Drives
+	4. Magnetic
+
+
+
+
+
+8. What is the max capacity of root volume in EBS?
+
+A.  the maximum capacity of a root volume in amazon EBS depends on the type of EBS volume. most commonly used types:
+	- general purpose SSDs (gp2 and gp3) and provisioned IOPS SSDs (io1 and io2) can go up to 16 TiB
+
+
+
+9. What is the difference between Volumes and snapshots?
+
+A. Both Volumes and Snapshots are important components of EBS and play a important roles in managing the data and resources.
+
+	EBS volumes are storage devices that can be attached to EC2 instances, while snapshots are point-in-time copies (backups) of volumes used to data protection and volume recovery. Volumes are used for persistent storage, while snapshots are a mechanism for creating backups and transferring data across EBS volumes.
+
+
+
+
+
+10. What is the difference between EBS, S3, EFS in AWS?
+
+A. S3 [Simple Storage Service] -- It is a Object Storage and is suitable for storing wide range of data types, such as photos and Videos. we use it for storing the backups, artifacts and content which is used in CI/CD pipelines. {it is based on global level}
+
+EBS [ Elastic Block Storage ] -- It is a block storage service designed to use with AWS EC2 instances. it is used as primary storage for data, databases and applications. it provides persistent block level storage.
+it enables dynamic scaling of storage resources and maintaining data durability. {it is based on available zones} 
+
+
+EFS [ Elastic File Storage ] -- it is network file storage system for ec2 instances and is used for shared access between multiple instances. it is used for shared application components, code repositories, and configuration files. {it is region based level}
+
+
+
+
+
+
+11. What is the difference between Security groups and NACL in AWS?
+
+A. both are used to control access to resources in AWS, but they operate at different levels and have different features.
+
+
+Security Groups:
+
+	- it operates at instance level providing security at the virtual machine level.
+	- it is stateful - meaning if incoming traffic is allowed, the return traffic is automatically allowed.
+	- attached to individual instances, allowing consistent security policies per instance. 
+
+
+
+NACL [ Network Access Control Lists ]:
+
+	- it functions at subnet level, controlling the traffic entering and leaving the subnet.
+	- it is stateless - meaning requires rules for both inbound and outbound traffic to permit desired communication.
+	- supports both allow and deny rules.
+	- it is associated with subnets, applying rules to all instances within the subnet.
+
+
+
+
+
+
+12. What is Subnet?
+
+A. A subnet is a range of IP address within a VPC. it divides the VPC's IP address range into smaller segments. each subnet is associated with a single availability zone in an AWS region. there are two types of subnets public subnet and private subnet.
+
+public subnet: these subnets have a route to the internet via an internet gateway. resources in public subnets can have public IP address and are accessible from the internet.
+
+private subnet: These subnets do not have direct access to the internet. resources here use a NAT gateway to connect to the internet, making them  more secure for sensitive data. 
+
+this help to better organize and secure the resources in my VPC.
+
+for instance, I might use a my web servers in a public subnet to handle incoming traffic and my databases in a private subnet to protect sensitive information from direct internet exposure. this setup helps in applying better security measures, ensuring that necessary traffic reaches each part of the application.
+
+
+
+
+
+13. What is the difference between internet gateway and NAT gateway?
+
+A. Internet Gateway:
+	- allows instances with public IP address in your VPC to access the internet.
+	- facilitates direct internet access for the resources like webservers and public facing services.
+	- no additional costs associated using the internet gateway
+
+NAT gateway:
+	- enables instances in private subnets, without public IP address, to access the internet for outbound traffic though a public NAT gateway. it does not allow inbound traffic from the internet
+	- it is useful for the instances that requires outbound internet access without direct exposure, commonly used for software updates and external services.
+	- it incurs charges based on creation and usage within the account.
+
+
+
+14. Can you tell me about maven goals?
+
+A. maven is a build automation tool used primarily for java projects. maven helps in managing dependencies efficiently. by defining dependencies in the pom.xml file, maven handles downloading and including the required libraries.
+
+  1. Compile:
+	- this goal complies the source code of the project.
+	- it takes the source code from /src/main/java directory and compile it into /target/classes directory.
+	- command : "mvn compile".
+  2. test:
+	- this goal runs the unit tests using the suitable testing framework like Junit.
+	- it compiles the test code located in the /src/test/java directory and then runs the test.
+	- command : "mvn test"
+  3. install:
+	- this goal installs the package into the local repository, making it available for the other projects in the same machine.
+	- it is used to share the artifacts among multiple projects ina local development environment.
+	-  command: "mvn install"
+  4. Deploy:
+	- this goal copies the final package to a remote repository for sharing with other developers or deploying to a production environment.
+	- it is typically used in continuous integration and continuous deployment pipelines.
+	- command: "mvn deploy"
+
+
+
+
+15. What kind of issues that sonar will identify?
+
+A. it can identify various types of issues related to code quality, security, and maintainability. they are
+1. Bugs
+2. vulnerabilities
+3. Code Smells: security weakness , insecure coding practises can we found out
+4. code duplication:
+5. Architecture and Design quality
+6. performance concerns
+7. Security hotspots
+
+
+
+
+
+16. what is branch in a git?
+
+A. A branch in a git is like a parallel source where you can make changes to the code without messing up the main version. it's a way to work on new features or fix  problems without disrupting what's already working. once the changes are ready we can merge it to the main code. branches help keep things organized and safe, making collaborations and development easier.
+
+
+
+17. What is the branching strategy in your project?
+
+A. 
+
+1. Main branch - this is where the stable, production- ready code resides, and only admins can make changes here
+
+2. Development branch: developers work on new features and fixes here, merging their work back into this branch.
+
+3. Feature branch: this is separate branch where a each feature and fix get tested.
+
+4. Release branch: prepares code for an upcoming release by focusing on bug fixes.
+
+5. Hotfix branch: created to fix the critical issues in the main branch immediately.
+
+
+
+
+
+
+18. What is tagging in the GIT?
+
+A. there are two types of tags in Git
+ 	- Annotated tag
+	- Lightweight tag
+annotated tag includes metadata of the user and lightweight tag are simple pointers and do not contain any metadata.
+
+
+
+
+
+19. What is the difference between merge and rebase in GIT?
+
+A. Merge:
+	preserves the branching history and shows all the merge commits, which can be useful for understanding the complete development timeline.
+
+Rebase:
+	creates a linear history by moving the commits from the feature branch to the tip of the main branch, making history cleaner and easier to read.
+
+in my project we used merge for integrating changes from long lived branches like release branches, to preserve the complete history of hoe the branches diverges and converges. for the feature branches we use rebase to keep the commit history clean and liner before merging the feature branch to main branch. 
+
+
+
+20. What is the difference between Git commit and push?
+
+A. Git commit:
+	- records the changes to the repo by creating new snapshot of the project
+	- it is used to save changes, document modifications, and create new version or history record within the local repo.
+
+Git push:
+	- git push is used to update the remote repo, sending the committed changes to the shared server
+	- used to sync the changes and share committed snapshots with a remote repo.
+	- it uploads local commits to the remote repo.
+
+
+
+21. What is the difference between git fetch and git pull?
+
+A. Git Fetch:
+	- Retrieves the latest commits, files, and references (branches, tags) from the remote repository.
+	- Does not integrate the fetched changes into your current branch. You can review the fetched changes before deciding how to integrate them.
+	- Allows you to see what others have committed without altering your working directory or branches.
+
+You want to see if there are any updates on the remote repository without altering your current working branch. After fetching, you can inspect the changes and decide whether to merge them manually.
+
+Git Pull:
+	- Retrieves the latest commits, files, and references from the remote repository.
+	- Automatically merges the fetched changes into your current branch.
+	- Since it merges changes directly, it may result in merge conflicts that you need to resolve.
+
+
+
+
+
+22. How can you resolve the Git conflicts?
+
+A. A Git conflict occurs when changes from different branches or commits cannot be automatically merged by Git. This usually happens when the same line of a file has been edited differently in the branches being merged. 
+
+  we resolve git conflicts by
+	1. identifying the conflict
+	2. "git status" command
+	3. resolve the conflict by searching the conflicts markers like <<<,======,>>>> within a file
+	4. after resolving "git add ." command
+	5. commit changes "git commit -m 'xx' ".
+
+
+
+
+25. What is master slave in Jenkins? and how it will distribute the workload?
+
+A. Jenkins uses a master-slave architecture to distribute build jobs across multiple machines, enhancing scalability and reliability. The master node manages job scheduling, configuration, and dispatching jobs  to slave nodes. Slave nodes, perform the actual build tasks. by distributing the workload, Jenkins can run multiple jobs in parallel, reducing build times and allowing for specialized build environments.
+
+
+
+
+26. Consider a Jenkins pipeline with multiple stages in this case third stage got failed but I want to run the whole job, what is the process?
+
+A. to ensure that a Jenkins pipeline runs all stages even if one of the stages got fails, I use 'catchError' step within the script block. this allows the pipeline to catch any errors within a specific stage, mark the stage as failed, but continue executing the remaining stages. For instance, in a pipeline within the multiple stages. for instance, in pipeline with multiple stages, if the third stage fails using 'catchError' ensures that stages 4 and 5 will execute. this approach is useful for scenarios where you want to gather results or logs from all stages regardless of individual failures.
+
+
+
+
+
+
+27. Write a Dockerfile for springboot application?
+
+
+A. creating a Dockerfile for a springboot application is a common task in a Devops Role.
+
+# Start with a base image containing Java runtime
+	FROM openjdk:11-jre-slim
+
+# Add a label to identify the maintainer [ it provides metadata of the image. it specifies who maintains the image, making it easier for others to know who to contact if there are any issues.
+	LABEL maintainer="youremail@example.com"
+
+# Set the working directory inside the container
+	WORKDIR /app
+
+# Copy the Spring Boot application's JAR file into the container
+	COPY target/my-springboot-app.jar /app/my-springboot-app.jar
+
+# Expose the port on which the application runs
+	EXPOSE 8080
+
+# Set the entry point to run the JAR file
+	ENTRYPOINT ["java", "-jar", "/app/my-springboot-app.jar"]
+
+
+
+
+
+
+
+28. what is the difference between run and CMD instructions in docker?
+
+A. the 'RUN' instruction is used to execute commands during the build process of the Docker image. it allows you to install software package, set up environments, and perform other tasks required to configure the image. 'RUN' commands are executed at the build time, creating intermediate layers that are committed to the final image.
+
+
+the 'CMD' instruction specifies the default command to run when a container is started from the image. it can be overridden by providing a different command when running the container.
+
+
+
+
+
+
+29. how to check the docker container logs?
+
+A. we will check the docker logs for debugging and monitoring behaviour of the application running inside containers. Docker provides several commands to access container logs. 
+	- docker logs <container_id>
+	- docker logs -f <container_id> [to stream logs]
+	- docker logs --tail 10
+	- docker logs --since 10m
+	- docker logs --until <timestamp>
+
+
+
+
+
+
+30. What is the difference between deployment  and stateful set in Kubernetes?
+
+A. In Kubernetes both 'deployment' and statefulset' are used to manage the lifecycle of applications, but they serve different purposes and are suited to different types of applications.
+
+'deployment' is used to manage stateless applications. Stateless applications don't need to retain any data or state between restarts. like webservers and microservices.
+
+
+'statefulset' is designed to manage stateful applications. stateful applications require persistent storage and stable network identities like databases.
+
+
+
+
+
+
+
+31. What is blue-green deployment ?
+
+A. Blue green deployment is a strategy used to release applications with minimal downtime and reduced risk. the idea is to have two identical environments: a 'blue' environment that is currently serving production traffic and a 'green' environment where the new version of the application is deployed and tested.
+
+first, you deploy the new version of your application in your green environment. this allows you to conduct testing and ensure that everything works as expected without affecting the live users.
+
+once you are confident that the new version in the green environment is stable and functioning correctly, we switch the production traffic from blue environment to green environment. this switch is done using a load balancer or DNS change.
+
+After switch, we monitor the green environment to ensure that the application is working correctly with live traffic. if any issues detected, you can quickly revert the traffic back to the blue environment.
+
+
+
+
+
+
+
+
+32. What is cherry picking in GitHub?
+
+A. Cherry-picking in Git is the process of selecting specific commits from one branch and applying them to another branch. This is particularly useful when you want to apply particular change, like a bug fix or a feature, from one branch to another without merging all changes from the source branch.
+
+	- git cherry-pick <commit-hash>
+
+
+
+
+33. A shell script named test.sh can accept 4 parameters i.e abcd the parameters wont supplied in order always and number parameters might also vary (only 2 parameters user might supply sometimes ), how to identify position of letter c?
+
+A. 
+
+#!/bin/bash
+
+# Initialize a variable to track the position of 'c'
+position=0
+
+# Loop through all the supplied arguments
+for i in "$@"; do
+  position=$((position + 1))  # Increment the position counter
+
+  # Check if the current argument is 'c'
+  if [ "$i" == "c" ]; then
+    echo "The position of 'c' is: $position"
+    exit 0  # Exit the script after finding 'c'
+  fi
+done
+
+# If 'c' is not found in the supplied arguments
+echo "'c' was not found in the supplied arguments."
+
+
+
+
+
+34. Why we need ad-hoc ansible commands, give scenario where you have used ansible ad-hoc command?
+
+A. Ad-hoc ansible commands are essential for performing quick, one-time tasks across multiple servers without writing a full playbook. this is particularly useful for immediate operations such as restarting services, running shell commands, or updating packages.
+
+
+35. When I need detailed logs on executing ansible playbook what option should I need to use.?
+
+A. when I need detailed logs for executing an ansible playbook, I use the verbose options '-v', '-vv', '-vvv', '-vvvv'. each additional 'v' increases the level of detailed logs, including task execution outputs, variable information, and connection details. this is particularly used for understanding the exact behaviour of the playbook.
+
+
+
+
+
+
+36. what is ansible.cfg file?
+
+A. the ansible.cfg file allows us to define various settings that customize how ansible operates. like 'defaults', 'logs'
+
+
+
+
+
+
+37. what are the modules have you worked on? which module will you use for getting file from node to master?
+
+A. in my experience with ansible, I've worked with various modules including 'file', 'copy', 'fetch', 'user', 'apt', and 'yum'. for example , if I need to use 'fetch' module. this module allows me to specify the source file on the remote node and the destination directory on the local machine. its particularly useful for collecting logs or configuration files from multiple servers.
+
+
+
+
+
+38. Let say, I have a playbook which  has 5 tasks in playbook, first 2 tasks should run on local machine and other 3 tasks should run on node?
+
+A. to run the specific tasks on the local machine and other on remote nodes within a single ansible playbook, I use 'delegate_to' keyword for the tasks that should execute locally. I structure it two separate plays targeting to local host like using the command 'delegate_to: localhost' to ensure they run locally. and remaining tasks run remotely on the nodes.
+
+
+
+
+
+Jenkins
+-------
+
+
+39. How to save only last 5 build of Jenkins job?
+
+A. to ensure that only the last 5 build of a Jenkins job are retained, you can configure the job to discard old build. this is done by opening the job configuration, checking the 'discard old build' option, and setting the max of builds to 5. this setting helps in managing disk space and keeping the Jenkins environment clean by automatically removing older builds that are no longer needed.
+
+
+40. have you worked on Jenkinsfile ?
+
+A. Yes, I have experience in working with Jenkinsfiles, which are essential for defining CI/CD pipelines as code. for instance, in my  project with an insurance company, I used a Jenkinfile to automate our entire build, test, and deployment process. I utilized the declarative syntax to create a multi-stage pipeline that handles everything from code checkout to deployment. by storing our Jenkins file in our version control system, we ensured that our pipeline was versioned and auditable.
+
+
+
+44. why we need multi-branch pipeline? in Jenkins
+
+A. my client is insurance domain that is developing a web application for managing insurance policies, claims, and customer information. the development team is using git for version control, jenkins for CI/CD and follows a branching strategy with multiple branches for different features, bug fixes and hotfixes.
+
+a developer is working on a new feature to allow customers to update their contact information online. they create a new branch 'feature/update-contact-info'. jenkins automatically detects this new branch and creates a pipeline for it. the pipeline runs a unit tests, integration tests, and build the feature branch to ensure the new functionality works as expected.
+
+another developer is fixing bug where policy claims are not being processed correctly. they create branch 'bugfix/claims-processing'. jenkins detects the branch and sets up a pipeline that runs unit tests specific to the claims processing module and build the branch to verify the fix.
+
+ - it automatically creates and manages pipelines for all branches, reducing the manual effort 
+ - each branch has its own isolated build and test environment. change in one branch do not effect the builds of other branches.
+ - immediate feedback for every code change in any branch. early detection of integration issues and bugs.
+
+
+
+
+
+45. if you forget Jenkins Password, how would you login back?
+
+A. 1. first you need  to access to the server where Jenkins is installed. 
+ 2. before making any changes to the Jenkins configurations, stop  the Jenkins service to avoid any conflicts. this is done by
+	sudo systemctl stop jenkins
+ 3. locate the config.xml file in the jenkins home directory. the default location is usually '/var/lib/jenkins/config.xml'
+ 4. open the config.xml in a text editor with sudo permissions
+	sudo nano /var/lib/jenkins/config.xml
+ 5. look for <usesecurity> tag and set it to false
+ 6. save the changes and restart the jenkins service
+	sudo systemctl start jenkins
+ 7. with security disabled, you can now access the jenkins web interface without a password. navigate to manage jenkins and configure global security. re-enable security by setting <usesecurity> back to true and configure the appropriate security setting.
+ 8. set a new password for your user.
+ 9. after resetting the password and configuring security, make sure to save the changes and then stop jenkins again.
+ 10. edit config.xml file and set <usesecurity> to true
+ 11. sudo systemctl start jenkins.
+ 12. access jenkins through the web interface using the new credentials you configured.
+
+
+46. Any 3 best practises of docker?
+
+A. - using smaller base images improves the performance of the containers, like instead of using ubuntu we can use alpine which is lightweight.
+
+ - multi-stage builds allows you to use multiple 'FROM' statement in your dockerfile to create intermediate images. this helps to keep the final image small and only includes the necessary components. 
+
+ - Use docker volumes to store database files or application logs that need to persist across container restarts.
+
+
+
+47. what is the difference between docker stop and docker kill?
+
+A. Docker stop: it tries to shutdown the container by sending a signal to the container asking it to stop. this allows the container to finish what its doing like saving data or closing connections.
+
+  Docker kill: it stops the container immediately without giving it a chance to finish its task. it sends a signal that forces to the container to stop right away.
+
+
+
+
+48. command to list the docker containers which state is exited?
+
+A. docker ps -a --filter "status=exited"
+
+
+
+39. command to clean the docker host (deleting stopped containers, dangling images and unused networks) ?
+
+A. cleaning the docker host involves in removing the stopped containers, dangling images and unused networks. this helps to free the workspace and keep you docker environment clean. 
+
+commands to clean the docker host:
+ - docker container prune -f
+ - docker image prune -f 
+ - docker network prune -f
+ - docker volume prune -f
+
+
+
+40. what version of docker you have used ? specific reason to use that particular version?
+
+A. Docker 19.03.8 version I have used. at that time this version is a stable release, widely adopted in industry 
+
+
+
+42. can we have multiple CMD  in dockerfile?
+
+A. In Dockerfile you can only have one 'CMD' instruction. If multiple 'CMD' instructions are specified, only the last one will take effect. to run multiple commands we can combine them in a single 'CMD' using shell operators or create an entrypoint script that handles the multiple commands.
+
+
+
+
+43. can we have multiple containers in a pod? can we have similar containers in a pod? lets say I have 4 containers, one of them has failed how would you check which container has failed?
+
+A. yes we can have multiple containers in pod which allows them to share the same resources and communicate efficiently. ton identify the failing container we can use 
+ - kubectl get pods
+ - kubectl describe pod
+ - kubectl logs
+
+it is technically possible to run similar containers in a pod, it is usually more efficient to run similar instances as separate pods to take advantage of Kubernetes orchestration capabilities, like scaling and load balancing.
+
+
+
+44. What is liveliness and readiness probe? why we need them?
+
+A. liveliness and readiness are the features of the Kubernetes used to monitor and manage the health of applications running in pods. they help ensure that applications are running smoothly and can handle traffic appropriately.
+
+Liveliness Probe:
+  - the liveliness probe checks if the application running in a pod is alive. if the liveliness probe fails, Kubernetes will restart the pod, assuming that it is in a bad state and cannot recover on its own.
+
+Readiness Probe:
+  - the readiness probe checks if the application in the pod is ready to accept traffic. if the readiness probe fails, Kubernetes will temporarily removes the pod from the service endpoints, meaning it will not send the traffic to the pod until it is ready again.
+
+
+
+
+45. Have you worked on Kubernetes monitoring? which tools you have used?
+
+A. in my project, I deployed a microservices application on a EKS cluster. to ensure reliability, I have set up Prometheus for metrics collection and Grafana for visualization. custom dashboards were created to monitor the application's performance and the cluster's health.
+
+one incident involved a sudden spike in memory usage in one of the services. the Prometheus alerting system notified the team immediately, and using Grafana, we identifies the service and scaled it appropriately to handle the load.
+
+
+
+46. can we deploy a pod on particular node?
+
+A. Yes, there are several ways to deploy pod on a specific node. these methods include Node Selectors, node affinity, and taints and tolerations. 
+
+Node Selectors:
+  - Node selectors are the simplest form of node selection. they allow you to specify a key-value pair that must be present on the node for the pod to be scheduled there.
+
+Node Affinity:
+  - node affinity allows you to specify rules about which nodes a pod can be scheduled on. it helps in placing the pods on nodes with specific labels.
+
+	- requiredDuringSchedulingIgnoredDuringExecution (hard affinity)
+	- prefferdDuringSchedulingIgnoredDuringExecution (soft affinity)
+
+Taints and Tolerations:
+  - taints are applied to the nodes so that pods are not scheduled onto these nodes unless the pod has a matching toleration. 
+
+
+
+
+
+47. lets say your organization has GitHub and bitbucket to store code, you have cloned a repo in your local and changed the cloned folder name to some other name. after few days one of you team members asks you to share the clone link, what would you do? the problem here is you have changed the cloned directory name (by default code will cloned to directory with repo name), now if you search with changed directory name in GitHub or bitbucket it wont list.
+
+A. by using the 'git remote -v' command , I can easily retrieve the original repository URL regardless of the local directory name change. the allows me to share the correct clone link with my team member, ensuring that they can access the repository without any issues.
+
+
+
+
+48. so tell me how you implemented ci/cd for EKS?
+
+A. I implemented CI/CD pipeline for deploying applications to an EKS cluster.
+  1. Cluster creation:
+	- I used terraform to provision the EKS cluster. the cluster was created with multiple worker nodes for high availability and scalability.
+
+  2. Jenkins Setup:
+	- I setup up a Jenkins master-slave architecture to handle the CI/CD pipeline. Jenkins was configured to automatically trigger builds and deployments based on code changes. Plugins were installed to integrate with Jenkins with GitHub for source management, docker for containerization, and Kubernetes for Deployments.
+
+  3. Building and Testing:
+	- the pipeline was configured to checkout the code from the Git repo whenever the changes are pushed. maven was used as a build tool to compile the code, run unit tests, and generate artifacts like (jar, war). Code quality checks were performed using SonarQube to ensure high standards.
+
+  4. Creating Docker Images:
+	- Dockerfiles were created to define the application environment. Jenkins built the Docker images from these Dockerfiles and tagged them with version numbers. the images are pushed to Amazon ECR (Elastic container Registry) for storage and later use in deployments.
+
+  5. Deploying to EKS:
+	- Kubernetes manifests (YAML files) were written to define the Deployment configurations, including pods, services, and replicasets . these manifest were stored in the Git repository and version controlled.
+
+  6. CI/CD Integration:
+	- Jenkins was configured to use the Kubernetes plugin, allowing it to interact with EKS cluster. During Deployment stage, Jenkins used 'kubectl' commands to apply the Kubernetes manifests, deploying the Docker containers to the EKS cluster.
+
+  7. Monitoring and Scaling:
+	- Prometheus and Grafana were set up to monitor the health and performance of the EKS cluster and the deployed applications. Alerts were configured to notify the team if any issues, such as high resource usage or pod usage.
+
+  8. Scaling:
+	- Horizontal Pod autoscaling was configured to automatically scale the number of pods based on CPU usage and memory usage, ensuring the application could handle varying loads efficiently. 
+
+
+
+49. what is tf.state file? actually what does it contain?
+
+A. the terraform.tfstate file is essential for terraform to manage infrastructure effectively. it keeps a snapshot of the current state of the resources, enabling terraform to apply precise incremental changes. 
+
+I'm managing AWS infra with terraform, and I've defined several resources such as EC2 instances, security groups, and S3 buckets. When I apply 'terraform apply', Terraform creates or updates these resources and records their current state in the 'terraform.tfstate' file. This file contains the exact details of each resources like instance IDs, security group rules, and S3 bucket names.
+
+I later modify my terraform configuration to add more instances or change security groups rules, Terraform uses the .tfstate file to understand the existing state of the infrastructure. it then determines the necessary changes to apply to reach the new desired state.
+
+
+
+
+
+50. suppose I have wrote all resources in terraform file and I have initiated the terraform command and my resources are running in cloud, but now the tf.state file got corrupted and all resource files got deleted including tf.state file including in s3 bucket, git hub and local machine? now how will you delete the resource running in cloud?
+
+A. in case where the .tfstate file is corrupted or lost, along with all the terraform configuration files, you will need to manage the resources in the cloud.
+
+  - first, identify all the resources that were provisioned by terraform. like using AWS CLI to list resources like EC2 instances, S3 buckets , RDS instances, etc.
+
+  - Document the details of all the identified resources, including their names, types and configurations. this will help that you have a clear understanding that you have a clear understanding of what needs to be deleted.
+
+  - use AWS CLI to delete the resources manually.
+
+
+
+51. What is node pool(GCP) / node groups (AWS)?
+
+A. node pool is a group of nodes within a cluster that have the same configuration. Nodes in a node pool share the same specifications, such as machine type, disk type, and labels. node pools are used to manage and scale groups of nodes independently within the same cluster.
+
+
+
+
+52. can you describe a scenario where you handled high traffic and how you resolved it?
+
+A. Scenario 1:
+
+in one of my project, we had an application that experienced unexpected traffic spikes, which led to performance issues and downtime. To resolve this, I configured auto-scaling Groups (ASGs) in AWS to automatically adjust the number of ec2 instances based on demand. I set up metrics in CloudWatch to monitor CPU utilization and network traffic. I also configured ELB to distribute the incoming traffic across multiple instances, which ensured high availability.
+
+
+
+53. What is PDB?
+
+A. A Pod Disruption Budget, is a Kubernetes resource that helps ensure the high availability of your application during voluntary disruptions. Voluntary disruptions are planned events like node maintenance, scaling, or rolling updates. PDBs do this specifying the minimum number of pods that must be available or the maximum number of pods that can be unavailable at any time.
+
+
+
+54. What is the difference between HPA and VPA?
+
+A. Horizontal Pod autoscaling (HPA):
+
+HPA is used to automatically scale the number of pod replicas based on observed metrics such as CPU utilization or memory usage. it adjusts the number of pods to match the desired performance targets. 
+
+Vertical Pod Autoscaler (VPA):
+
+VPA automatically adjust the resource request and limits of the containers in pod based on their actual usage. it ensures that pods have appropriate resource allocated, helping to optimize performance and resource utilization. 
+
+In general HPA is used for stateless applications like web-servers where load can be handled by adding more instances, where as VPA is used to statefull applications like databases where increasing the resources for a single instance can improve performance
+
+
+
+55. Describe blocks in terraform?
+
+A. Terraform blocks are the basic units of configuration. they define the desired state of your infra and the resources required to achive that state. the most common types include: 'provider block', 'data', 'variable', 'output', 'resource', and module.
+
+- provider block specifies the provider in my project it is AWS, that terraform should use to provision infra.
+	provider "aws" {
+	  region = "us-west-2"
+	}
+- resource block defines the resources to be created or managed by terraform. this can include instances, databases, networking components etc.
+	resource "aws_instace" "example"{
+	ami = "ami-0c55b137823y6j83"
+	instance_type = "t2.micro"	
+	}
+- Data block is used to fetch information from providers that can be used to configure other resources. it does not create resources but retrieves existing information. 
+	data "aws_ami" "example"{
+	most_recent = true
+	filter {
+	name = "name"
+	values = ["amzn-ami-hvm-*"]
+	}
+	owners = ["amazon"]
+	}
+- variable block defines the input variables that allows you to customize your configuration.
+	variable "intance_type"
+	description = "type of the instance"
+	default = "t2.micro"
+	}
+- output block defines values that are returned after a terraform apply, which can be used to get information about infra 
+	output "instance_id"{
+	value = ami.instanace.example.id
+	}
+- module block consists set of resources and configurations into a reusable package. modules can be called multiple times with different configurations. 
+	modules "vpc"{
+	source = "terraform-aws-modules/vpc/aws"
+	version = "2.0.0"
+	cidr = "10.0.0.0/16"
+	}
+
+
+
+
+56. What are backend modules in terraform?
+
+A. the backend in terraform determines where and how the statefile is stored. these backend modules reuse for locking, and consistency of the infrastructure state.
+
+Backends in AWS cloud technology we use 
+- S3 with DynamoDB for state locking(AWS)
+
+	module "backend"{
+	source = "my-terraform-state-bucket"
+	key = "state/terraform.tfstate"
+	region = "us-west-2"
+	dynamodb_table = "terraform-lock-table"
+	}
+
+
+
+56. what is terraform statefile locking?
+
+A. - terraform state file locking is a feature that prevents operations on the state file
+
+- locking is important because multiple team members might run terraform commands simultaneously.
+
+- in AWS, we use s3 to store the statefile and DynamoDB to handle the state locking. the backend configuration in terraform includes both the s3 bucket details and DynamoDB table for locking.
+
+
+
+
+56. In which language the terraform statefile is written?
+
+A. this file is written in JSON, a format which is both human-readable and machine friendly.
+
+
+
+
+57. define network in docker?
+
+A. In docker, networking refers to how containers communicate with each other, with the docker host, and with external networks. docker provides various network options to ensure secure and efficient communication.
+
+Types of docker networks:
+1. Bridge Network: this is default network type. when a container is started, it is attached to a bridge network if no other network is specified. this network type is suitable for applications running on single host that need to communicate with each other.
+
+	docker network create my-bridge-network
+	docker run -d --name container1 --network my-bridge-network my-image
+
+
+2. Host Network: in this type of network the containers use host's IP address and ports. it is useful for applications require high network performance and where network isolation is not necessary.
+
+	docker run -d --network host my-image
+
+3. Overlay Network: overlay networks enable communication between containers running on different Docker hosts, making it ideal for distributed applications in Kubernetes cluster.
+
+	docker network create -d overlay my-overlay-network
+	docker service create --name my-service --network my-overlay-network my-image
+
+
+58. Explain the difference between Ingress and Cluster IP in Kubernetes?
+
+A. Cluster IP: 
+
+- it is useful for internal service-to-service communication. it provides internal access to applications with the cluster. it assigns a virtual IP that is only accessible within the cluster, for the communication between different services.
+
+Ingress: 
+
+- ingress is used when you nee to expose your services to the external world. it provides functionality like load balancing, and routing bases on hostnames or paths for HTTP/HTTPS traffic.
+
+
+
+59. Explain what are named volumes in Docker and how are they used?
+
+A. named volumes in docker are they type of volumes that allows you to persist data generated and used by the containers. they are managed by docker and are stored in the Docker host filesystem. 
+
+- Data stored in the named volumes is not lost when the container is removed or restarted.
+
+- named volumes can be shared among the multiple containers, making it easy to share data and communicate different parts of an application.
+	
+	docker volume create my-named-volume
+
+to run a container using named volume 
+	docker run -d --name my-container -v my-named-volume:/app/data my-image
+
+
+
+
+60. Pipeline using declarative syntax?
+
+A. I will define the pipeline in a Jenkinfile. 
+
+pipeline {
+    agent any
+
+    stages{
+      stage('checkout'){
+        steps{
+             //checkout code from the git repo
+	       git 'https://github.com/exmaple/repository.git'
+          }
+       }
+       stage ('build') {
+          steps {
+             //run a maven build
+             sh 'mvn clean package'
+           }
+       }
+       stage ('test') {
+         steps {
+             // run tests
+             sh 'mvn test'
+           }
+        }
+        stage ('Deploy') {
+          steps {
+		//deploy the application
+		sh 'mvn deploy'
+	    }
+         }
+
+
+61. Docker command to expose two ports
+
+A. docker run -d -p 80:80 -p 443:4443 --name my-container my-image
+
+
+62. what are the services available in K8?
+
+A. types of services available in K8 are:
+1. ClusterIP Service: this is default service in Kubernetes. it exposes the service on cluster-internal IP. it is useful for interpod communication within the cluster.
+
+2. NodePort Service: this exposes the service on each node's IP at static port. this makes service accessible from outside the cluster using '<NodeIP>:<NodePort>'
+
+3. LoadBalancer Service: this service exposes the service externally using a cloud provider's load balancer. it is an extention of the NodePort service and automatically creates a ClusterIP and NodePort service. the cloud provides load balancer routes the traffic to NodePort service.
+
+4. ExternalName Service: ExternalName service maps a service to the contents of the 'externalname' field for ex: example.com by returing the CNAME record with its value. 
+
+	
+
+
+
+63. What ae annotations in yaml file?
+
+A. Annotations are key-value pair that can be attached to Kubernetes objects such as pods, services, deployments, etc to store non-identifying information.
+
+- annotations are used to store arbitrary metadata (additional information) about Kubernetes object. this information can be used by different tools and process to enhance the management and operational aspects of the Kubernetes environment.
+
+
+
+
+
+64. What is the use of the command 'Terraform fmt'?
+
+A. Terraform fmt command formats the terraform configuration files (.tf files) according to a standardized style defined by Hashicorp language (HCL).
+
+
+
+
+
+65. How to delete the particular service using terraform destroy?
+
+A. for example consider the terraform  resource
+
+resource "aws_instance" "example" {
+ ami = "ami- jdxjsd"
+ instance_type = "t2.micro"
+}
+
+terraform destroy -target = aws_intance.example
+
+
+
+
+66. how can we see the resources of a statefile in terraform?
+
+A. to view the resources in the statefile, you can use 
+- command:	'terraform state list'
+
+
+
+
+67. What is terraform registry?
+
+A. terraform registry is a centralized repository where users can discover, share and use pre-built terraform modules and providers. to use a module, we simply search for it in the registry, copy the snippet, and add it your terraform configuration, then you initialize and apply the configuration to provision the infra.
+
+
+
+
+68. what is HCL wallet?
+
+A. HashiCorp configuration language, is a domain-specific language created by hashicorp for defining infrastructure as code. 
+
+- HCL is designed to be human-readable, making it accessible even to those who are not developers. its syntax is similar to JSON but user-friendly.
+
+
+
+
+69. What is the release procedure followed in organization level/
+
+A. In our project release occurs every 2 weeks as our sprint is arranged in that way.
+
+- Planning: we start by reviewing the tasks in JIRA and plan the sprint. Developers create own feature branch in Git with new features.
+
+- CI: code is pushed to git, triggering Jenkins to build the application, run tests, and perform code analysis with SonarQube.
+
+- CD: artifacts are stored in Nexus. Terraform scripts provision infrastructure in AWS, and ansible scripts configure the environment.
+
+- Containerization: Docker images are built and pushed to ECR. Kubernetes manifests are applied to deploy these images to our EKS cluster.
+
+- Deployment: Jenkins pipeline automate the deployment process. post-deployment tests are run to ensure everything is functioning as expected.
+
+- Monitoring: Prometheus and Grafana monitor the application, and logs are aggregated in CloudWatch. Any issues fed back into the development cycle through JIRA.
+
+
+
+
+70. What is the location or region of your AWS?
+
+A. As ours is US-based project we mainly use 
+  - us-east-1 (Northern Virginia)
+  - ua-west-2 (Oregon)
+
+we choose these regions because if offers the lowest latency to the majority of our users on the East and West coast. 
+
+
+
+
+71. How to achive cost-optimization in aws respective to your project?
+
+A. - we use tools like AWS compute optimizer and CloudWatch to monitor CPU, memory, and network usage. based on the insights, we scale down or upsize instances as needed.
+
+- for long-running applications and databases, we purchase 1-year or 3-year reserved instances, which can provide up to 75% to cost saving compared to On-demand instances.
+
+- we use Auto scaling to automatically adjust the number of EC2 instances in response to traffic patterns. during peak traffic hours, auto scaling automatically adds instances to handle the load, and during off-peak hours, it scales down, reducing costs.
+
+- we use spot instances for non-critical and batch processing workloads like data processing, which reduces 70% compared to using on-demand instances.
+
+- implement lifecycle policies to automatically transistio  old log files to glacier storage, reducing our s3 storage costs by 40%
+
+- we configured AWS budgets to alert us when our spending approached predefined thresholds, allowing us to take corrective actions before costs roll out of control.
+
+- minimizing data transfer costs by using AWS services within the same region and taking advantage of AWS Direct Connect.
